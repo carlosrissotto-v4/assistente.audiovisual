@@ -147,17 +147,44 @@
   .hero-stat .l{font-size:13px;color:rgba(255,255,255,.72);}
 
   /* ---------- SECTIONS ---------- */
-  .room-section{padding:52px 0;}
-  .room-section.alt{background:var(--panel-bg);}
-  .room-head{
-    display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap;
+  .room-section{
+    padding:76px 0 64px;
+    position:relative;
+    border-top:1px solid var(--line);
   }
-  .room-head h2{font-size:28px;}
+  .room-section:first-of-type{border-top:none;}
+  .room-section.alt{background:var(--panel-bg);}
+  .room-marker{
+    display:inline-flex;align-items:center;gap:8px;
+    margin-bottom:18px;
+    font-size:13px;font-weight:600;color:var(--red);
+    background:rgba(229,9,20,.07);
+    border:1px solid rgba(229,9,20,.22);
+    border-radius:999px;
+    padding:5px 12px 5px 6px;
+  }
+  .room-marker .idx-n{
+    display:flex;align-items:center;justify-content:center;
+    width:20px;height:20px;border-radius:50%;
+    background:var(--red);color:#fff;
+    font-family:var(--font-display);font-size:11.5px;
+  }
+  .room-head{
+    display:flex;align-items:stretch;gap:16px;margin-bottom:10px;flex-wrap:wrap;
+  }
+  .room-head .bar{
+    width:6px;flex:0 0 auto;
+    background:var(--red);border-radius:3px;
+    min-height:48px;
+  }
+  .room-head-text{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .room-head h2{font-size:clamp(30px,4.2vw,44px);line-height:1.02;letter-spacing:.2px;}
   .room-tag{
     font-size:12px;font-weight:600;color:var(--red);
     border:1px solid var(--red);border-radius:999px;padding:3px 10px;
+    white-space:nowrap;
   }
-  .room-desc{color:var(--gray);font-size:15px;max-width:60ch;margin-top:6px;margin-bottom:30px;}
+  .room-desc{color:var(--gray);font-size:15px;max-width:60ch;margin-top:10px;margin-bottom:34px;}
 
   /* ---------- TUTORIAL CARD ---------- */
   .tutorial{
@@ -315,15 +342,19 @@
   <!-- ================= STAAGE ================= -->
   <section class="room-section" id="staage">
     <div class="wrap">
+      <span class="room-marker"><span class="idx-n">1</span>Sala 1 de 2</span>
       <div class="room-head">
-        <h2>Auditório Staage</h2>
-        <span class="room-tag">2 tutoriais</span>
+        <span class="bar" aria-hidden="true"></span>
+        <div class="room-head-text">
+          <h2>Auditório Staage</h2>
+          <span class="room-tag">2 tutoriais</span>
+        </div>
       </div>
       <p class="room-desc">Painel de LED controlado por send card e som operado pela mesa digital. Siga os dois tutoriais abaixo antes de qualquer apresentação na sala.</p>
 
       <!-- TUTORIAL: LED -->
-      <article class="tutorial" data-open="true">
-        <button class="tutorial-head" data-toggle aria-expanded="true">
+      <article class="tutorial" data-open="false">
+        <button class="tutorial-head" data-toggle aria-expanded="false">
           <div class="tutorial-head-text">
             <h3>Operação do painel de LED</h3>
             <div class="sub">7 passos · liga, conecta o notebook e ajusta o enquadramento na tela</div>
@@ -549,9 +580,13 @@
   <!-- ================= ROBIATI ================= -->
   <section class="room-section alt" id="robiati">
     <div class="wrap">
+      <span class="room-marker"><span class="idx-n">2</span>Sala 2 de 2</span>
       <div class="room-head">
-        <h2>Sala Robiati</h2>
-        <span class="room-tag">1 tutorial</span>
+        <span class="bar" aria-hidden="true"></span>
+        <div class="room-head-text">
+          <h2>Sala Robiati</h2>
+          <span class="room-tag">1 tutorial</span>
+        </div>
       </div>
       <p class="room-desc">Som operado por mesa digital com apoio do app Multiroom e do amplificador digital para diagnóstico de problemas.</p>
 

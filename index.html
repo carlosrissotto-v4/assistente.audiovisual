@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assistente de operação audiovisual — V4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Fjalla+One&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#E50914;
+    --red-deep:#560303;
+    --red-bright:#FB2E0A;
+    --ink:#050505;
+    --ink-soft:#1E2124;
+    --gray:#606060;
+    --line:#E4E1DC;
+    --section-bg:#FAF9F7;
+    --panel-bg:#F2F2F2;
+    --card:#FFFFFF;
+    --white:#FFFFFF;
+    --cta:#0E8420;
+    --cta-hover:#0A6A1A;
+    --amber:#FFDD00;
+    --amber-ink:#4A3B00;
+    --shadow: 0 1px 2px rgba(5,5,5,.04), 0 8px 24px -12px rgba(5,5,5,.18);
+    --radius-s:6px;
+    --radius-m:12px;
+    --radius-l:20px;
+    --font-body:'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display:'Fjalla One', 'Arial Narrow', sans-serif;
+    --maxw:920px;
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --ink:#F2F2F2;
+      --ink-soft:#E4E1DC;
+      --gray:#ABA6A6;
+      --line:#33302E;
+      --section-bg:#141212;
+      --panel-bg:#1E1B1A;
+      --card:#1C1918;
+      --white:#F2F2F2;
+      --amber-ink:#3A2E00;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#F2F2F2;
+    --ink-soft:#E4E1DC;
+    --gray:#ABA6A6;
+    --line:#33302E;
+    --section-bg:#141212;
+    --panel-bg:#1E1B1A;
+    --card:#1C1918;
+    --white:#F2F2F2;
+    --amber-ink:#3A2E00;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--section-bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+  h1,h2,h3,h4{margin:0;font-family:var(--font-display);font-weight:400;letter-spacing:.2px;}
+  p{margin:0;}
+  button{font-family:inherit;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+  :focus-visible{outline:3px solid var(--cta);outline-offset:2px;border-radius:4px;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important;}
+  }
+
+  /* ---------- NAV ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:40;
+    background:var(--card);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:var(--maxw);margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;gap:20px;justify-content:space-between;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:19px;letter-spacing:.3px;white-space:nowrap;}
+  .brand .mark{
+    width:30px;height:30px;border-radius:7px;
+    background:var(--red);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-family:var(--font-display);font-size:15px;flex:0 0 auto;
+    padding:6px;
+  }
+  .brand .mark-img{width:100%;height:100%;object-fit:contain;display:block;}
+  .roomnav{display:flex;gap:6px;}
+  .roomnav a{
+    font-size:14px;font-weight:600;text-decoration:none;color:var(--gray);
+    padding:8px 14px;border-radius:999px;border:1px solid transparent;
+    transition:color .15s, border-color .15s, background .15s;
+    white-space:nowrap;
+  }
+  .roomnav a:hover{color:var(--ink);border-color:var(--line);background:var(--panel-bg);}
+  @media (max-width:640px){
+    .roomnav{display:none;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:linear-gradient(155deg, var(--red-deep) 0%, var(--red-bright) 100%);
+    color:#fff;
+    padding:64px 0 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;inset:0;
+    background:radial-gradient(circle at 82% 18%, rgba(255,255,255,.14), transparent 55%);
+    pointer-events:none;
+  }
+  .hero-inner{position:relative;}
+  .hero-eyebrow{
+    font-size:14px;font-weight:600;color:rgba(255,255,255,.78);
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:clamp(34px,5.2vw,52px);
+    line-height:1.05;
+    max-width:14ch;
+    margin-bottom:18px;
+  }
+  .hero p.lede{
+    font-size:17px;
+    color:rgba(255,255,255,.86);
+    max-width:52ch;
+    margin-bottom:30px;
+  }
+  .hero-stats{display:flex;gap:28px;flex-wrap:wrap;}
+  .hero-stat{}
+  .hero-stat .n{font-family:var(--font-display);font-size:30px;line-height:1;display:block;margin-bottom:4px;}
+  .hero-stat .l{font-size:13px;color:rgba(255,255,255,.72);}
+
+  /* ---------- SECTIONS ---------- */
+  .room-section{padding:52px 0;}
+  .room-section.alt{background:var(--panel-bg);}
+  .room-head{
+    display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap;
+  }
+  .room-head h2{font-size:28px;}
+  .room-tag{
+    font-size:12px;font-weight:600;color:var(--red);
+    border:1px solid var(--red);border-radius:999px;padding:3px 10px;
+  }
+  .room-desc{color:var(--gray);font-size:15px;max-width:60ch;margin-top:6px;margin-bottom:30px;}
+
+  /* ---------- TUTORIAL CARD ---------- */
+  .tutorial{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-l);
+    margin-bottom:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .tutorial-head{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+    padding:22px 24px;
+    cursor:pointer;
+    background:none;border:none;width:100%;text-align:left;color:inherit;
+  }
+  .tutorial-head-text h3{font-size:20px;color:var(--ink);margin-bottom:6px;}
+  .tutorial-head-text .sub{font-size:13.5px;color:var(--gray);}
+  .tutorial-toggle{
+    flex:0 0 auto;
+    width:32px;height:32px;border-radius:50%;
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink);
+    transition:transform .25s ease, background .15s;
+  }
+  .tutorial[data-open="true"] .tutorial-toggle{transform:rotate(45deg);background:var(--panel-bg);}
+  .tutorial-toggle svg{width:14px;height:14px;}
+
+  .equip-strip{
+    display:flex;flex-wrap:wrap;gap:8px;
+    padding:0 24px 20px;
+  }
+  .equip-chip{
+    font-family:'IBM Plex Sans',monospace;
+    font-size:11.5px;letter-spacing:.2px;
+    color:var(--ink-soft);
+    background:var(--panel-bg);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:5px 9px;
+    white-space:nowrap;
+  }
+  .equip-chip b{color:var(--red);font-weight:600;}
+
+  .tutorial-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .35s ease;
+  }
+  .tutorial[data-open="true"] .tutorial-body{max-height:6000px;}
+  .tutorial-body-inner{
+    padding:4px 24px 28px;
+    border-top:1px solid var(--line);
+  }
+
+  .video-link{
+    display:flex;align-items:center;gap:14px;
+    margin:20px 0 26px;
+    padding:14px 16px;
+    background:linear-gradient(120deg, var(--red-deep) 0%, var(--red) 100%);
+    color:#fff;
+    border-radius:var(--radius-m);
+    text-decoration:none;
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .video-link:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  .video-play{
+    flex:0 0 auto;
+    width:38px;height:38px;border-radius:50%;
+    background:rgba(255,255,255,.2);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .video-play svg{width:14px;height:14px;fill:#fff;margin-left:2px;}
+  .video-link .vl-text{display:flex;flex-direction:column;gap:2px;}
+  .video-link .vl-title{font-size:14.5px;font-weight:600;}
+  .video-link .vl-sub{font-size:12.5px;color:rgba(255,255,255,.62);}
+
+  .steps{list-style:none;margin:0;padding:0;counter-reset:step;}
+  .step{
+    display:flex;gap:16px;
+    padding:18px 0;
+    border-top:1px solid var(--line);
+  }
+  .step:first-child{border-top:none;}
+  .step-n{
+    flex:0 0 auto;
+    width:30px;height:30px;border-radius:50%;
+    background:var(--section-bg);
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-display);font-size:14px;color:var(--red);
+    margin-top:1px;
+  }
+  .step-content{flex:1;min-width:0;}
+  .step-title{font-weight:600;font-size:15.5px;margin-bottom:4px;color:var(--ink);}
+  .step-text{font-size:14.5px;color:var(--ink-soft);}
+  .step-text p + p{margin-top:8px;}
+  .substeps{margin:10px 0 0;padding-left:20px;font-size:14.5px;color:var(--ink-soft);}
+  .substeps li{margin-bottom:6px;}
+  .subblock{
+    margin-top:10px;
+    padding:10px 14px;
+    background:var(--section-bg);
+    border:1px solid var(--line);
+    border-radius:var(--radius-s);
+  }
+  .subblock-title{font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--ink);}
+
+  .warn{
+    display:flex;gap:10px;
+    margin-top:12px;
+    padding:12px 14px;
+    background:#FFF7D6;
+    border:1px solid #E6C900;
+    border-radius:var(--radius-s);
+    font-size:13.5px;
+    color:var(--amber-ink);
+  }
+  :root[data-theme="dark"] .warn, @media (prefers-color-scheme: dark){ .warn{ } }
+  .warn svg{flex:0 0 auto;width:17px;height:17px;margin-top:1px;fill:#8A6D00;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    background:var(--ink);
+    color:rgba(255,255,255,.7);
+    padding:40px 0 28px;
+    margin-top:8px;
+  }
+  footer .wrap{display:flex;flex-direction:column;gap:6px;}
+  footer .fbrand-logo{height:26px;width:auto;margin-bottom:10px;}
+  footer p{font-size:13px;line-height:1.6;color:rgba(255,255,255,.55);}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="mark"><img src="data:image/png;base64,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OQ9YHnkm9T8URb7mu5qqfgRsaOkxCOC2SCltwj7dWmJbftI4JCI+lHfX2+RhqS1dLDBeNv4WXE15LRvOb0fE0EPRzugkNVs5zyIeeShqPMjjrr0veSRkjR5Wou0PKcqimYZslIUh9d6wHuMZuNY7+rlLgVtZiNhQiXQXn8RERERZiIiIshAREWUhIiLKQkRElIWIiCgLERFRFiIiIspCRESUhYiIKAsREVEWIiKiLERERFmIiIiyEBERZSEiIqIsREREWYiIiLIQERFlISIiykJERJSFiIgoCxERURYiIiLKQkRElIWIiCgLERFRFiIioixERERZiIiIshAREWUhIiKiLERERFmIiIiyEBERZSEiIspCRESUhYiIKAsREVEWIiIiykJERJSFiIgoCxERURYiIqIsREREWYiIiLIQERFRFiIioixERERZiIiIshAREWUhIiLKQkRElIWIiCgLERERZSEiIspCRESUhYiIKAsREZkpBh6C2oj8fVNKqQ9ESik8LNLqiz4idfFzd+HeVhb1McrJ7bcj4hpg6CERUZJz+xlTSpuABU/39B828vdF4AXApcDSxP8TaVOSTsB/dzFdpJR2BfotvbcDSMqiOX4E3M5y95RImx6MesAtwKMi4ocppWi7NMpnzN3MnwIekh8I21gLvtVuqGZupATcy0MhLWcT3R00c3/gfm0+t8qimQgX2PUk7X4giiyLLosysVyrVBayQ9IQaftDUdc/f1uPQzjPQkREtoqyEBERZSEiIspCRESUhYiIKAsREVEWIiKiLERERFmIiIgoCxERURYiIqIsREREWYiIiLIQERFlISIiykJERJSFiIiIshAREWUhIiLKQkRElIWIiCgLERFRFiIioixERERZiIiIKAsREVEWIiKiLERERFmIiIiyEBERZSEiIspCRESUhYiIiLIQERFlISIiykJERJSFiIgoCxERURYiIqIsREREWYiIiCgLERFRFiIioixERERZiIiIshAREWUhIiLKQkRERFmIiIiyEBERZSEiIspCRESUhYiIKAsREWkNAw+BiEyRfkqpD0RKKbX8s5bP2FcWIiKrJwE3RcSwY597mFIaKQsRkdW3J4emlG7KT9utTxb5M/aA3dp+ciOltAlY8DoXEZHNcMugA/YXkeYYdbRNaX3dYgAsAjt5jYvIFHCEZbtIjLvbFnvAbZUXRUREJrm9B9zkcRARkS1wcw/4oclCRERWoHjhBz3ge8pCRES2IIsbesA3PR4iIrIFvtEDvpT/EB4PERGpULzw5R7wv5WFiIhsRhYJ+GIP+Drwg8qLIiIiZY7F94Gv94DvZGGgLEREZMIHX4mIG3oRkYDP5hdHHh8REWF56ZbPw/LU/E/k707VFxGR4oMAPlmVw6eBm/Of7YoSEek2Zen1HwN/D9BLKfUi4nvAp/IPDD1OIiKdZph98MmI+H5Kqd+rpIsrcuRwCK2ISLcpLlhf/hwppYiIlFLaE/h3YA+Wh0yJiEi3KO3/jcDDIuLGlFL0sij6EfFdYGP+YUdFiYh0k9L+b8yi6EdEmhz9dBbLhQ0REekeZaDT2ZMvEhHDXOj+e+DvcgSx0C0i0i2Guf3/ZER8NnthyESCKDWKN3q8REQ6zV9OeOHOReyUUokffwf8ZrZM3+MmItKJVNFnvKLH4wEi4o769WRtIvLyH6/2uImIdJJXZUncKUz0JkxRahfXAldmy1i7EBHpRqr4UET8VbVWcYcfJv9GpSvqIcB1wC44WU9EpK2k/HUb8AjgK+PsEKPNJoucLkZALyK+Crw2/4zpQkSkvamiB/xpRHw5t/93mWu3YlpIKQXLY20/AeyNxW4RkTaKos94scDfyq+Ncu1667LIwuhFxCil9BDgC8Bu2B0lItIWSvfTLcCjI+LLpd1f6Yc3O1M7i6IfEV8DnsVyd5RLmIuIzL8oSvfTs7Mo+psTxRZlkYUxTCkNImIdcAYwAJY8ziIic80wt+dviYiLsii2WJveapdSqV9kcawHDs3CGHi8RUTmjtJ+X5Xb8x6bqVNskywqwgC4O3A140KIwhARmU9RfAZ4MnArKwyTXYlVrS6bjRMRcSvwVMYbeNslJSIyf6L4J+CQiLhltaJYtSyyMEa5Un4TcCDwufwPL3oORERmmsXcXn8BOCDvU9FbrSi2SRYTwrgReArw18BCNpajpEREZjNRLACfBPaPiP/cVlFssywmhPGjnDAuzMZKuMOeiMisMMpfA+ASYL+I+MH2iGK7ZDEhjNsj4gTglfl3uTSIiMjaM6y0ya+LiKMj4rbtFQXs4GzsPEoqsjwOAM4EHsjybktuzyoi0hylh6cPXA+cHhEbygKxWxseO/VkUUkYKYtiEBEfBR4HXJHfaA9rGSIiTUliKT+k94GNwOOyKPo7KoodlkVFGkt5BuD1EXEEcDzwLcZ9ZWU/b6UhIjJ9SZSenEFOEydHxFMj4ltlZvaOigKmvChgjjqlprEn8DLg2Ywn88FyP5qLEYqI7JgkSncTwO3Ae4HXR8T11RLBtP7BWhrt6jojKaWHAy8BjmY8fAusaYiIbA+jLIoiiSVgPXBGRFw32f5Ok9qe8KtrSuU//wpwGnAUcJ/Kj5YPZeIQEblrgihf1TbyJmAdcGZE/EuRBKtY42nmZFGRRi/HoSKNBwBHAMcAvzHx46W2ERNfIiJdEkNpByc3nLsOuBi4NCL+X6WNZZpdTmsii81JI7/2aOAQYB/gkcBOWziAYJFcRNpFVL6v1B4vMV7L6Vrgqoj4XKX9LKOcRk2+0ebUOe6e6kfE0sTrPwc8FnhUFscDgb02IxARkbaxifFopm/lBPEF4HN5A7pqWzlg3N3U6IoZa9rFk80Yk+LI/2+PijB+DvhJ4L7A7owL5TuxvE+4iMg8pIhRlsIi8GPgRuA/gf8AbgC+mRdrZQVBJGqsSWyN/w9yg5Gm2SXKigAAAABJRU5ErkJggg==" alt="V4" class="mark-img"></span>Assistente de operação audiovisual</div>
+    <nav class="roomnav" aria-label="Navegação entre salas">
+      <a href="#staage">Auditório Staage</a>
+      <a href="#robiati">Sala Robiati</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="hero-eyebrow">Guia interno de equipamentos</div>
+    <p class="lede">Tutoriais passo a passo para operar o painel de LED e o som do Auditório Staage, e o som da Sala Robiati.</p>
+  </div>
+</section>
+
+<main>
+  <!-- ================= STAAGE ================= -->
+  <section class="room-section" id="staage">
+    <div class="wrap">
+      <div class="room-head">
+        <h2>Auditório Staage</h2>
+        <span class="room-tag">2 tutoriais</span>
+      </div>
+      <p class="room-desc">Painel de LED controlado por send card e som operado pela mesa digital. Siga os dois tutoriais abaixo antes de qualquer apresentação na sala.</p>
+
+      <!-- TUTORIAL: LED -->
+      <article class="tutorial" data-open="true">
+        <button class="tutorial-head" data-toggle aria-expanded="true">
+          <div class="tutorial-head-text">
+            <h3>Operação do painel de LED</h3>
+            <div class="sub">7 passos · liga, conecta o notebook e ajusta o enquadramento na tela</div>
+          </div>
+          <span class="tutorial-toggle" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M11 5h2v14h-2z" fill="currentColor"/><path d="M5 11h14v2H5z" fill="currentColor"/></svg>
+          </span>
+        </button>
+        <div class="equip-strip">
+          <span class="equip-chip"><b>Send card</b> — Nova Star VC4</span>
+        </div>
+        <div class="tutorial-body">
+          <div class="tutorial-body-inner">
+            <a class="video-link" href="https://youtu.be/pgmyvmmUb_o" target="_blank" rel="noopener">
+              <span class="video-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="vl-text">
+                <span class="vl-title">Assistir ao vídeo passo a passo</span>
+                <span class="vl-sub">Operação da tela de LED — Auditório Staage · abre no YouTube</span>
+              </span>
+            </a>
+
+            <ol class="steps">
+              <li class="step">
+                <span class="step-n">1</span>
+                <div class="step-content">
+                  <div class="step-title">Ligar o equipamento</div>
+                  <div class="step-text"><p>Localize o botão no canto esquerdo do send card e ligue-o. A inicialização leva cerca de um minuto. Ao concluir, o equipamento exibirá uma tela com as dimensões do painel de LED.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">2</span>
+                <div class="step-content">
+                  <div class="step-title">Conectar o notebook</div>
+                  <div class="step-text"><p>Use o cabo HDMI identificado com a etiqueta "HD", que fica sobre a mesa, e conecte-o à saída do seu computador. Se o computador não tiver entrada HDMI, utilize o hub USB com porta HDMI disponível na sala.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">3</span>
+                <div class="step-content">
+                  <div class="step-title">Configurar a tela do computador</div>
+                  <div class="step-text">
+                    <ol class="substeps">
+                      <li>Com o cabo conectado, acesse as Configurações de tela do computador.</li>
+                      <li>Configure o painel de LED como segunda tela, posicionada à esquerda.</li>
+                      <li>Clique em <strong>Identificar</strong> para confirmar que o painel corresponde à tela de número 2.</li>
+                    </ol>
+                  </div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">4</span>
+                <div class="step-content">
+                  <div class="step-title">Apresentar conteúdo no painel</div>
+                  <div class="step-text">
+                    <p>Primeiro exiba o conteúdo na tela do computador e depois leve-o para o painel de LED.</p>
+                    <ul class="substeps">
+                      <li>No Windows: <strong>Windows + Shift + Seta para a esquerda</strong> move o conteúdo para o painel.</li>
+                      <li>Para trazer de volta ao computador: <strong>Windows + Shift + Seta para a direita</strong>.</li>
+                      <li>Alternativa menos recomendada: arrastar a janela manualmente com o mouse.</li>
+                    </ul>
+                    <div class="warn">
+                      <svg viewBox="0 0 24 24"><path d="M12 2 1 21h22L12 2zm0 5 7.5 13h-15L12 7zm-1 4h2v4h-2v-4zm0 5h2v2h-2v-2z"/></svg>
+                      <span>Se for utilizar um passador de slides, evite manter a apresentação na tela principal do computador — o apresentador perde o controle dos slides.</span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">5</span>
+                <div class="step-content">
+                  <div class="step-title">Ajustar o enquadramento (Presets)</div>
+                  <div class="step-text">
+                    <p>Por padrão o conteúdo aparece centralizado em 1920x1080. Para mudar isso no send card: pressione o botão <strong>Seletor</strong> (à direita do visor), gire até "Ajuste de Preset" e pressione novamente para confirmar. O menu mostra 6 presets de enquadramento.</p>
+                    <div class="subblock">
+                      <div class="subblock-title">Preset 1 (C1) — Tela cheia (100%)</div>
+                      Gire até C1 → pressione o Seletor → gire até "Carregando" → pressione para confirmar. O conteúdo passa a ocupar 100% da tela; se o material não tiver sido criado na proporção do painel, podem ocorrer distorções.
+                    </div>
+                    <div class="subblock">
+                      <div class="subblock-title">Preset 4 — Conteúdo centralizado</div>
+                      Gire até o preset 4 → pressione o Seletor → gire até "Carregando" → pressione para confirmar.
+                    </div>
+                    <div class="subblock">
+                      <div class="subblock-title">Qualquer outro preset</div>
+                      Gire até o preset desejado → pressione no centro → vá até "Carregando" → pressione novamente para aplicar.
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">6</span>
+                <div class="step-content">
+                  <div class="step-title">Voltar ao menu principal</div>
+                  <div class="step-text"><p>Pressione a tecla <strong>ESC</strong>, à direita do Seletor, quantas vezes forem necessárias até retornar ao menu principal.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">7</span>
+                <div class="step-content">
+                  <div class="step-title">Encerrar a utilização</div>
+                  <div class="step-text"><p>Ao terminar de usar o painel de LED, desligue o equipamento pelo botão do canto esquerdo.</p></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <!-- TUTORIAL: SOM STAAGE -->
+      <article class="tutorial" data-open="false">
+        <button class="tutorial-head" data-toggle aria-expanded="false">
+          <div class="tutorial-head-text">
+            <h3>Operação de som</h3>
+            <div class="sub">8 passos · mesa, microfones, áudio do computador e transmissão</div>
+          </div>
+          <span class="tutorial-toggle" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M11 5h2v14h-2z" fill="currentColor"/><path d="M5 11h14v2H5z" fill="currentColor"/></svg>
+          </span>
+        </button>
+        <div class="equip-strip">
+          <span class="equip-chip"><b>Mesa de som</b> — Yamaha MG10XUF</span>
+          <span class="equip-chip"><b>Receptores</b> — Shure BLX4</span>
+          <span class="equip-chip"><b>Microfones</b> — Shure PG58</span>
+        </div>
+        <div class="tutorial-body">
+          <div class="tutorial-body-inner">
+            <a class="video-link" href="https://youtu.be/1_-R2jhbPa8" target="_blank" rel="noopener">
+              <span class="video-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="vl-text">
+                <span class="vl-title">Assistir ao vídeo passo a passo</span>
+                <span class="vl-sub">Operação de som — Auditório Staage · abre no YouTube</span>
+              </span>
+            </a>
+
+            <ol class="steps">
+              <li class="step">
+                <span class="step-n">1</span>
+                <div class="step-content">
+                  <div class="step-title">Ligar a mesa de som</div>
+                  <div class="step-text"><p>Localize o botão de ligar na parte de trás da mesa, do lado direito, e ligue o equipamento. Algumas luzes acendem indicando que a mesa está ligada.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">2</span>
+                <div class="step-content">
+                  <div class="step-title">Ligar os receptores dos microfones</div>
+                  <div class="step-text"><p>Há pelo menos 2 receptores conectados à mesa. Para ligar cada um, segure o botão à direita do equipamento. Cada receptor recebe o sinal de um microfone diferente — fitas coloridas em cada equipamento ajudam a associar microfone e receptor.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">3</span>
+                <div class="step-content">
+                  <div class="step-title">Ligar os microfones</div>
+                  <div class="step-text"><p>Segure o botão ao centro de cada microfone por cerca de um segundo, até o LED verde permanecer aceso.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">4</span>
+                <div class="step-content">
+                  <div class="step-title">Ajustar o volume dos microfones</div>
+                  <div class="step-text">
+                    <p>Cada microfone corresponde a um canal específico (1 e 2), identificado pela cor.</p>
+                    <ol class="substeps">
+                      <li>Confira se o canal está ligado (botão correspondente aceso); se estiver apagado, ligue-o.</li>
+                      <li>Peça para o palestrante falar no mesmo tom que usará na apresentação.</li>
+                      <li>Regule o volume do canal de acordo com esse tom de voz.</li>
+                    </ol>
+                    <div class="warn">
+                      <svg viewBox="0 0 24 24"><path d="M12 2 1 21h22L12 2zm0 5 7.5 13h-15L12 7zm-1 4h2v4h-2v-4zm0 5h2v2h-2v-2z"/></svg>
+                      <span>Evite deixar o volume do canal no máximo — pode danificar o equipamento. Priorize manter em 0 dB. Se ainda estiver baixo em 0 dB, peça ao palestrante para falar mais próximo ao microfone. Use os dois canais somente se for usar os dois microfones; caso contrário, desligue o segundo canal.</span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">5</span>
+                <div class="step-content">
+                  <div class="step-title">Verificar a saída master estéreo</div>
+                  <div class="step-text"><p>À direita da mesa: certifique-se de que está ligada (luz acesa) e ajustada em 0 dB.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">6</span>
+                <div class="step-content">
+                  <div class="step-title">Rodar áudio a partir de um computador</div>
+                  <div class="step-text">
+                    <ol class="substeps">
+                      <li>Utilize o cabo conectado à saída 6 da mesa de som.</li>
+                      <li>Certifique-se de que a luz do canal 5/6 está acesa e em 0 dB.</li>
+                      <li>Conecte o cabo P2 (etiqueta "Áudio PC OUT"), que fica sobre a mesa, à saída de fone de ouvido do computador.</li>
+                      <li>Se surgir uma janela perguntando se deseja conectar um fone de ouvido, clique em OK antes de testar o áudio.</li>
+                      <li>Deixe o volume do computador no nível 10, para não sobrecarregar a mesa.</li>
+                    </ol>
+                  </div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">7</span>
+                <div class="step-content">
+                  <div class="step-title">Testar e ajustar o volume</div>
+                  <div class="step-text">
+                    <p>Rode o áudio e ajuste o volume do computador conforme necessário. Se o som ainda estiver baixo mesmo com o volume alto, aumente o volume do player/música e continue ajustando. Observe o medidor de decibéis no canto superior direito da mesa.</p>
+                    <div class="warn">
+                      <svg viewBox="0 0 24 24"><path d="M12 2 1 21h22L12 2zm0 5 7.5 13h-15L12 7zm-1 4h2v4h-2v-4zm0 5h2v2h-2v-2z"/></svg>
+                      <span>Não permita que a luz vermelha do topo do medidor fique piscando continuamente — isso pode danificar o equipamento.</span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">8</span>
+                <div class="step-content">
+                  <div class="step-title">Usar o som para transmissão ao vivo ou call</div>
+                  <div class="step-text"><p>Utilize o cabo conectado à saída de fone de ouvido da mesa (fica enrolado próximo aos receptores) e conecte a ponta P2 à entrada de microfone do computador.</p></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= ROBIATI ================= -->
+  <section class="room-section alt" id="robiati">
+    <div class="wrap">
+      <div class="room-head">
+        <h2>Sala Robiati</h2>
+        <span class="room-tag">1 tutorial</span>
+      </div>
+      <p class="room-desc">Som operado por mesa digital com apoio do app Multiroom e do amplificador digital para diagnóstico de problemas.</p>
+
+      <!-- TUTORIAL: SOM ROBIATI -->
+      <article class="tutorial" data-open="false">
+        <button class="tutorial-head" data-toggle aria-expanded="false">
+          <div class="tutorial-head-text">
+            <h3>Operação de som</h3>
+            <div class="sub">11 passos · mesa, microfones, app Multiroom e amplificador digital</div>
+          </div>
+          <span class="tutorial-toggle" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M11 5h2v14h-2z" fill="currentColor"/><path d="M5 11h14v2H5z" fill="currentColor"/></svg>
+          </span>
+        </button>
+        <div class="equip-strip">
+          <span class="equip-chip"><b>Mesa de som</b> — Yamaha MG10XUF</span>
+          <span class="equip-chip"><b>Receptores</b> — Shure BLX4</span>
+          <span class="equip-chip"><b>Microfones</b> — Shure PG58</span>
+          <span class="equip-chip"><b>Amplificador</b> — AAT PMR-9 G4 (4 zonas)</span>
+        </div>
+        <div class="tutorial-body">
+          <div class="tutorial-body-inner">
+            <a class="video-link" href="https://youtu.be/by-uanAGcNc" target="_blank" rel="noopener">
+              <span class="video-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="vl-text">
+                <span class="vl-title">Assistir ao vídeo passo a passo</span>
+                <span class="vl-sub">Operação do som — Sala Robiati · abre no YouTube</span>
+              </span>
+            </a>
+
+            <ol class="steps">
+              <li class="step">
+                <span class="step-n">1</span>
+                <div class="step-content">
+                  <div class="step-title">Ligar os receptores dos microfones</div>
+                  <div class="step-text"><p>Localizados à direita da mesa de som. Segure o botão "Power" por um segundo, à direita de cada equipamento.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">2</span>
+                <div class="step-content">
+                  <div class="step-title">Ligar a mesa de som</div>
+                  <div class="step-text"><p>Depois de ligar os receptores, ligue a mesa no botão localizado atrás, no lado direito. Algumas luzes da mesa acendem.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">3</span>
+                <div class="step-content">
+                  <div class="step-title">Ligar os canais dos microfones</div>
+                  <div class="step-text"><p>Ligue apenas o número de canais necessário para os microfones que serão usados, clicando no botão "ON" de cada canal (acima do seletor de volume).</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">4</span>
+                <div class="step-content">
+                  <div class="step-title">Ligar o canal Master Stereo</div>
+                  <div class="step-text"><p>Ligue o canal Master Stereo, à direita da mesa. Certifique-se de que os seletores de volume estão em 0 dB.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">5</span>
+                <div class="step-content">
+                  <div class="step-title">Ligar os microfones</div>
+                  <div class="step-text"><p>Segure o botão Power no centro de cada microfone por cerca de um segundo, até o LED verde acender.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">6</span>
+                <div class="step-content">
+                  <div class="step-title">Ajustar o volume dos microfones</div>
+                  <div class="step-text"><p>Peça para o palestrante falar ao microfone no mesmo tom que usará na palestra, e ajuste o volume do canal correspondente. Os canais são identificados com as mesmas cores dos microfones.</p></div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">7</span>
+                <div class="step-content">
+                  <div class="step-title">Reproduzir áudio de um computador</div>
+                  <div class="step-text">
+                    <ol class="substeps">
+                      <li>Utilize o canal 5/6 da mesa de som.</li>
+                      <li>Ligue o botão do canal 5/6 (acima do seletor de volume) — uma luz laranja deve acender.</li>
+                      <li>Certifique-se de que o seletor de volume está em 0 dB.</li>
+                      <li>Conecte o cabo do canal 5/6 (plugue P2) à saída de fone de ouvido do computador.</li>
+                      <li>No computador, confirme que a saída de áudio selecionada é a de fone de ouvido.</li>
+                    </ol>
+                  </div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">8</span>
+                <div class="step-content">
+                  <div class="step-title">Testar e ajustar o volume do computador</div>
+                  <div class="step-text">
+                    <p>Deixe o volume do computador no nível 10 antes de testar. Rode o áudio e vá ajustando conforme necessário; se ainda estiver baixo, aumente o volume do player e continue ajustando. Se preciso, ajuste também o volume diretamente no canal 5/6 da mesa.</p>
+                    <div class="warn">
+                      <svg viewBox="0 0 24 24"><path d="M12 2 1 21h22L12 2zm0 5 7.5 13h-15L12 7zm-1 4h2v4h-2v-4zm0 5h2v2h-2v-2z"/></svg>
+                      <span>Evite o volume máximo — pode danificar o equipamento. No medidor de decibéis (à direita da mesa), confira se a luz vermelha do topo não está piscando; se estiver, baixe o volume.</span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">9</span>
+                <div class="step-content">
+                  <div class="step-title">Verificar o app Multiroom (em caso de problemas de áudio)</div>
+                  <div class="step-text">
+                    <p>Se mesmo com tudo ligado corretamente o áudio não funcionar, verifique o app Multiroom no tablet da sala:</p>
+                    <ol class="substeps">
+                      <li>Deslize a tela para cima.</li>
+                      <li>Digite a senha "1234" e clique em OK.</li>
+                      <li>Verifique se os canais de áudio estão ativos — são 4: três da sala e um da área externa.</li>
+                      <li>Se não houver áudio, veja o ícone de alto-falante de cada canal: um "X" no ícone significa que ele está desabilitado — clique para habilitar.</li>
+                      <li>A última linha é a área externa; habilite-a somente se quiser transmitir som para fora da sala.</li>
+                      <li>Nesse app também é possível ajustar o volume dos alto-falantes da sala.</li>
+                    </ol>
+                    <div class="warn">
+                      <svg viewBox="0 0 24 24"><path d="M12 2 1 21h22L12 2zm0 5 7.5 13h-15L12 7zm-1 4h2v4h-2v-4zm0 5h2v2h-2v-2z"/></svg>
+                      <span>Evite deixar o volume no máximo no app, para não danificar os equipamentos.</span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">10</span>
+                <div class="step-content">
+                  <div class="step-title">Usar o som para transmissão ao vivo ou call</div>
+                  <div class="step-text">
+                    <ol class="substeps">
+                      <li>Utilize o cabo conectado à saída de fone de ouvido da mesa (ponta P2), ligando-o à entrada de microfone do computador.</li>
+                      <li>Ajuste o volume para quem está na call no seletor de volume dos fones da mesa — o nível 1 costuma ser adequado.</li>
+                      <li>Evite aumentar além do necessário, pois o áudio pode ficar muito alto para quem está na call.</li>
+                      <li>Abra a call/transmissão em outro computador ou celular e confira o volume de quem está assistindo.</li>
+                    </ol>
+                    <div class="subblock">
+                      <div class="subblock-title">Atenção especial: canal FX</div>
+                      Em nenhuma situação utilize o canal FX da mesa — ele insere efeitos de voz nos microfones e, se habilitado, pode gerar efeitos indesejados na voz do palestrante. Mantenha-o sempre desligado, com volume no mínimo.
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-n">11</span>
+                <div class="step-content">
+                  <div class="step-title">Verificar o amplificador digital (ausência total de áudio)</div>
+                  <div class="step-text"><p>Se mesmo após todos os passos anteriores não houver áudio na sala, verifique o amplificador digital: se a tela central estiver apagada, ligue o equipamento pressionando uma vez o botão seletor. Na sala Robiati, ele fica dentro da sala técnica, atrás da tela de LED.</p></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img class="fbrand-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYsAAAGQCAYAAABf8UzTAAAoHklEQVR42u2debRkVX3vP7+quoggglOImGgSNYlJTLIcokZJNERAJmVSZogERHGKU8zTOMQMosZZEQEREKQZmqYdQEMSl8Y4xJDh+WKc8tSnEBUVQyDQ91bt90ftzT0Ut7tvd9c5t+qcz2etuy5d3L5ddYb9Od/920OwhqSU+kBExNIK/+9ewAOBvYAH5+/3BXYFdgHeExEfSyn1I2LIDFHeU0rpMOAkYAnoIyJdJ4AhcBtwM3AjcD3wdeAG4JsR8aMV2pQBkIBRRKS1eOODNWhIA+hHxFK1kU8pPRh4LPBo4BEVUSxs5lddC3wsH/xZvCAAHgYc7P0hIqtgEbg+pfRt4B+BfwA+GxFfqz5QZ3GMImLUSlmklHo5RQzzkzYppUcBTwV+F3jkZsSQKl/kvzsANs3Byf/v/BSxtBZiFpG5SRuR278H5a/HF4GklP4J+GtgQ0R8vogj98ykpqRRewOWJUH5QCmlnwKOAI4FHjXx48MshVjhqyqPfv7ZebgI+sAIu6FEZCvNZeWheFQRyG/krz9KKV0HfBC4LCK+uVIbO3eyyN1NvdLVlFJ6OHAacBRw7wlBAPS2sUEdeW2JSAsTRmkPqwIpD8mPyF+vTCldDrw7Iq6rJI3aahq9mkTRj4iUi7y/llK6iHEf3HOyKIaVxr6fv8JrRUTkLgKpPkiPcvu5O3Ay8PmU0qUppUdGxDAiUpbGbMsipdRLKfWyJPZMKb0Z+CxwTI5Tw4ohex040cPKCRcRmUab3c/t6DD/95HA36eU3plS2iu3v1G6p2ZOFjlNjCJilFI6nnEl/w+AnSck0aWG064yEakrcVSlsRNwOvAPKaWTc8/OaJopYyqySCkNss0ekPvRLgB+mvEooLokYUMsIkpjWRpLjKcbnJNS2phSelBul/u5hrx2sihRJyKWUkoHAp8BDme5JjGoMUkseZ2IiNwhjUElaRwMfCaldGgeZBQ7KoztlkWWRIk6rwQ+nNNE6Ufref5MPyKyJkljCNwfWJ9S+pNcIkg7UsfYrr+YRTFKKe2UUroAeF1uGJ1PYPoRkbWnX2mT/zildElKaefcbm9Xu7/Nf6kiinsDHwWOz41imCZERGaGXv5aAp4BfDyldN/tFcY2/YWKKO6bRbEP4/VM6qxNiIjI9jPI7fTewDUppZ/cHmGs+ocrorhXFsVjsrEW1ugALHoNiIisioXcXj8SuDqldL9tFcaqfjBX0VNKaRfgKsYrw6714nhpDk5QqVmYukRkFhLGEvDrwMaU0j1yu74qD2z1hyprPCXgohxlXEW1PUITke4J47HAJflBdlXDaldjlLKRzxuBpykKEZFWCONA4C15HsZWXdDbSqro5wl3RwMvwR3fRETaJIznp5ROLDO9t0sWlQUBHwqcyfIcilnpf5+HCW9Dr0kRmVHKXIx3ppQeltv73jbJIvdfRTbNeYyXw00zIoqYI1k4g1tEZpXSlt4DOC+ltMAW6hebs0jZtOhFjLf3s/tJRKR9lEl7jwFeuqX6RW+FVNEDRrn76dW4hIeISJspa0m9IqX0i7n9760qWeRhsm8AdmV2up/mEYfOisisU9r3XYA3bG5b1t5EqujnWX1PZjxMdmiq2CGclCci85QuDk4p7b/SxkmTyaLM5nvtHHy4RZ/eRUSmzmuyB9KKsiipgvFEjceZKkREOpkuHgMcPJkuehOpIoCXecxERDrNi4sX7iSLSqp4PPAElvfNlu2jHGA3PxKReUsXCXhCSukJ1XQxWbM4NX93Mtl0pSEiMi+MGA/KeVb1xV5KKfI07z0Zb/K9kkRmiXmawS0iMm+U9v+gvFHSMKUUPZa7mw4E9mBc4JiHoZ7KQkSkngfyYfbBAfm1fq/S6B7OuNvErhOFJiLdprjg8NKWla1Sf4LxpkaBhe1pYoFbROaRssL43imln4iIUembejywG8uFDRER6S6RfbBb9sMdO949KUeOEbNd3J6MSSI7yqgD11LM0X0ts3Vv9IDfAq4c5Il4j5mjC6okn3no4lFo83EziMhdKffGY1JKMQAeADxkoiGW6eBCgrMvin8Cbm2hNMrE2tuAewG/SjMrSHchpXWF8lkfCuw1AH4euDcuRS7dkvgA+EvgZXn1glaSUtoN2Mjy6JY67/EuJLWyVXIXBgJFvmbuCzx0APxK5YlAWUhnRBERL0kpRZ6Y2pon4pRSGeW4B/AR4DcbaMjL77+10pa05ZiWz7IA7FRpL1MH5FjO5S8PgF/oSHwUmRRFHxhFRNrcvsNz1aKNP0c/z7jdA/hQFkX53HU+bfeBtwJvqjSubZJFGRm0N3A0sE/l9TYLo5zDhw6AB815HPQ9yraI4s2ToigNbUsSRRHFhxkPeaxTFClf4+W4vrjl19ANwFeAc1NK+wLvYlzv7UL3288MgD0r9pwnRr5H2Z4GbVIUrfiQy11PuzOuUTQhilH+/W+IiD/Mx7XNq0CUEaMpIj6eUnoi8LctF0bxwv0HjEdKzKMsRLZFFG/pgCj2YNz19IQGE8UZEfHyNh7XLQiSlNJCRHwnpXRyFkZb28/yue7TY7xYlEjbRfGiloqin0Vxz5womhTFn3VIFHduQSMWU0qDiPgU8NGcKtrc7bxbD9jZZFEbdkOtHaVBe2uLRVFqFLvnRLE3zXU9/UlEvLKLopg4BwFc1IGPulOP8XCweX1ynIcGSxGvbaL4g5Z3Pd0zi+K3GhJFH3hNRLy666KofPbrgNtZ3mWuVSEqf1/ozVlDVp0L4kgj2Zyg+x1IFKOJRDFsSBR/HBGvVRR3emD9DvDDOXqI3S5cF0faRHmyfmsHE0VdM4qronhFRPyporgLtwH/1fYPOfA8S8tE8baOiGIjzdUo+sDLI+KMMunPy+0utL4+qSzqjaeLE69Zu6hfFC+0RjF1Ubw0It5UjquX210I5rf2qyxmTBqiKKYhirIoYJOieHFEvNlEsVVZtH5hwcGcNxKiKAbA2zuSKDYCv92AKMry5i+MiLfl+QTeb1um9fXfeZaFT+2KoojiBSmlXotFcQ/gqoZEURLF8yLinYpi1aJY6MKHlPowttcrindkUfQZr9fT5hrFExtMFKcrCmlTspgHLAbW8+RbTRRtXcJjmBNFk11PPeC0iDhLUYiykHlPapOJoq1LeOzGctdT3RPuiihOiYhzFMV2taOllyba/CHn9QnTmkW3qHY9Pb8jo56e2GCiODki3qcopG2yGLFcD5jlxkKhTVcU7+yAKEoxu0lRnBQR5ysK2RIWuOtv5KxbTE8Uz+tIonhSA6KAcZfJCYpC2pwsRFG0NVE0JYoEHB8RF+eNfBa93MRkIfMsineZKKbGqPL92CyKgaIQk4W0QRTPbfmEu12BDQ2JIhjX+o6JiMtMFNKFZDFiPpb7WMIi9/aK4t1ZFG2ecFfmUfxOA6Lo5X/jqCwKE4V0QhbMSSOsKLaNYSVRnN7yPbN3ZVyj+B3GqxPXLYpNwNMj4oqcKCxmS2dkIe1LFP1Komhr11OZmb0hi2JIfesKFVHcDhwZERtMFKIsZN5FUbqeTm9511NJFL+bE0VdS1sXUdwGHB4RG00UoixmlxF2Ra1WFGdmUXShmF1qFHUniv/JoviIiaJWhtx5SHIrmecZ3KM5u4hky6J4TgfmUWwA9qGZYvYtwGER8XEn3NV/mrtwn8/z2lAu/90uUbQ9UaxvWBSHRsRfKQrpuiykfaJoc43iSuDJDYniZuBpEfE3ikKUxXwlIFlZFO/pgCh2WQNRHBIRn1AUMm0scNfLosK4y/EYAGdFxLM7kCg2NCCKYb6PbwIOUhRispA2JIqFnCjaLoq7N5QohoyH3hZRfFpRiMnirrHbG2K+RNGVRLFLg4miD/wQOEBRiLKQNonitJZPuCui2Jd6l/AoovhBFsVnFMWaP7y2fg6Lsqip/ag0lF2uWUyKos3DY3dhPDy2JIq6JtwVUXwfeEpEfE5RzNQ931qsWdR/AXVVFiuJou2jnkqiqFsU38uJ4h8VhZgspA2ieG8HRHH3nCj2bShR3ADsryjEZLE6RjiDex5E8awOJIr1wH40U8wuovhXRSEmi1Xer8zH2lDz8j4VxbaLYmfgigZF8W1g3yyKvqIQZdEuurSGVRn9c04HRFHmUexfsyiWKqLYLyK+mEVhqhZlIXObKBaAsyPilA4kivUNiKLsGvjNnCj+TVGIspB5F0VJFKd2pJjdVKL4RhbFl3KNQlHMbg9C67sF3YNbpiGKLiWKp1D/hLsB8PUsiq9Yo7A9UhbbT3U01CyfpGGLnzi6liiuqCSKuofHfi2L4qsmClEW0gZRnJsTRZuX8CiiOKDmRFG6nr6SRfEfJgpRFtIWUfx+y5fw2Bm4nHHXU92JYgD8O/DkiPi/JgpRFtI2UXQhUTRRzP43xsNjv2WikFnEtaFqbntozzyLLonibsBlDYiiJIovZlFc7/BYMVlMl3lZ7qMtM7hLX/37OiCKMurpQJqZmf2vjJfwUBRisrARnvtEsZBFcXLLRbET4xpFE11PA+Cfsyi+qyjmmk5sxmbNQlbTqJ3XAVE0lSjK775OUbQK51nIDl9A83oRlUbtfRHxzA7UKC7Poqh7eOwA+IKiEGUhm4un89TIdilRVEVR5/DYckw/z3iHu+8rClEWxr55piqKriSKgxpKFJ/NorhRUYiyaP6JXabfqL2/I6K4LIuiiUTxGeDAiPihohBlIW0Rxe91RBQH00wx++8Y75mtKFpIvkdaf06VRc3t05wkoC6JYqeGRfEp4KCIuElRtBplITssi1mn9NWf35FEcXmDovgE466nH+f3oChEWchcUvrq3x8RJ7VcFAvApQ2K4m+BQyLi5vIevNxEWTTPvCz3MeuiGAAXtDlRjL/dkSgOaUgU1wIHKwpRFjPQDjAfXTyzWvgqjdr5QKsTRU5Ol2ZR1Dk8tvzuvwKeFhG3KIp2M3G/LCoL2VFZzFpjUU0UJwGxwoXfClHkYvallURR5/DYBeAaRSHKQtrAHaKoJAra1KitMOrpqQ0liquBwyLiVkUhykLaIIoLI+LEnChSi0WxrsFE8eEsiv9RFKIsZqxdYH5qFrPwPu8QBXBiy4vZpevpadRbzC6JYiNweETcpig6TevP+zzLYmlOLqC1fp/VRHFCJVG0sZg9yIniqdQ/6mkBuBI4MiI2KYrOM6y0TcpC5o7y9PsBE8XUj+l64OmKQrqCsmgv5en3A8AJpW1toygYb0+6rgFRlGN6GfAMYKgoRFlIGxLFRVkUrRwem0UxaDhRrAOOyt0OoShEWcg0WIuZ5tVEcTztrFGURrqfRXFoQ4niYuDYLClFIaSUovIwoSxm6dxUTkyas/fclCgGwEURcXz591tYzE55raemup4GwAci4tj8AKAoZC3vc2XhiZmOKIATcjdNtHhRwHXAYTSzw90FLA8QUBTSSeyGap8oji8ybemEuwXgEpa7nure4e68PImxdcdURFnMVgKqu3EpjdrFLBezo22iGH+7QxSH0UzX07mV7WVNFLIlWn9tDDzHtcuizgJ3VRTHlRdbPDz2gw2K4uyIOLWNc1OkFtwpb4Yt3vWbt/TVf5DlUU9tHh67Dji8IVG8R1GItEMWw47LojqU87h8LNo64a7XcKJ4d0Q8W1GItEMWc9Xu1ZQoLuHOxexWzaOoJIpLGkwU74iI0xWFiLJolFwQXZqiNEqi+CDLk8No4YS7aqI4oiFRvC0inq8oZFtv88pDnLKQmWCp8qTdWlHk700nirdExAtTSn1FIaIs2iKK41geHts6UbA86ukI6ptwlyrH9E0R8aKcKEaKQqRdsliiOwXuqiiOIY/nbuE8inI9Xsxy11MdE+7KcOYB8MaIeKmJQqS9spjpm3qi0dmR8deTiSL/+vZNuKskiiOpr+upKorXR8TLsihMFLKjOM9C1kxskzWK1i1gNzE89uIGRfHnEfFHiqK2hKgslIU0RHXvhDKPghYniiZEUbZdfV1EvEJRTP18Rl67KzwaykKaofTVr6skirbOzI4siqc3kCj6wGsj4lWKYrqSSCn187LxLwP2Kq97dJTFrES+ebnRtyUNlERxaQdE0VSNoiSKV0XEaxTF1OlHxDCl9GrgDOB2D4mymKkGeNZv9sqT1Wr7MquJ4piWiiIqieKiBhPFH0fE6xTF1M/nICKWUkovBV4D3Ex3l+FZavsHdNXZ2bnQSqI4hhZu21mRZ68hUZRE8UcR8XpFUZso/gB4Q+UhoKvdT62/rpTFbImilfs7V0RRrVEsUt88irI/98sj4ozcpz70Upu6KJ4LvLmS4KxTKAupWRSXAUd3IFF8oJIo6hJFqYe8NCLeVBo2L7Wpi+JU4B1ZFEqiAzgprz6iIoStiaKtXU/VmdkXAUdR7xIeo/xvvVhR1CqKk4Gzsih6ygJYHsjS2u6oeU0Wd6zwOAd90GkViaLNE+4iJ4pn1JwoStfTCyPibYqiNlEcD5xTEXPQ7b1ltnUgi8lCtkl0A+Bylkc9tXlmdkkUdRazS9fT8xVFraI4Cnh/uWZNFN3CmkWzlCfry3OiGLZYFORE0YQoesDpEfFuRVGbKI7I5zMmnqilI5gs6mc0kSiuqIiiravHRoOJogc8R1HUcj4XsigOYTyBsqcoTBZSryxGwM4TiaKtE+7Ioji6IVGcGhFn54Zt0cttqoliMaV0IONh3f3KMZe74k55M8pwzi6iXr7hjspPvm3duKgUs5sSxSlZFANFMXVRLKWU9s0POHdTFKu6Lk0WM3hC5qnr5ieAa8lrPZXVOVsoCiqiqHPCXXnIeWZEnGeiqE0U+wDrcyIeKQrxAqiJynLN7wMO7ViiqFMUAfxeFoWJoh5RPAnYAOyqKGRek8W8CSMBZ5eGtYWJosjiQsbDgOtOFAAnRMSFFrNrE8XewFXAPRTFNuFCgrLDN2GPlu3vXEkUqSKKuhJFGdOfsiguUhS1ieLxwIeA3RTFDj3QKAtPzHali1Gr7og7b515AeNaTF3F7CKKEXBcRFyiKGoTxWOBDwO7s7wwoMgdzOuTw9LEE640mJLyVxOi6OXvxyqKWkXx6CyKPRSFtE0WsnaJIhpMFIuMhxuvUxS1ieKRwEeB+yiK7es8qD7AthlrFrKahiXIdZeU0oXAcQ0kiqUsivWKojZR/FoWxX1ZXohRtvOwmixEUeSnpwZFcTtwpKKoVRQPB65mPA/IYraYLGQqoiijno6lvuGxpcHaBDw9IjYqiqmfz34WxS8B1wD3x64naXmysAFpRhQlXp/Pco2iTlH8D3CYoqhNFMOU0i9mUeylKKaKa0PNKCOvzUYSBVkUx1PfDndFFLcBh0fERxRFbaL4+SyKn1YU0z/MykI6KYo8P+T9WRR1J4pbgKdFxNWKYurnc5BF8eAsigcpCtkerFnISokipZTOB06gvmJ2abBuzaK4VlHUkiiWsig+DvysohCThUw7UdQpijJM82bgEEVRa6L4WeBjwM8pilpwnsWMY81iug1Lb/k/G0sURRSfcJnx2hJFEcWDFUX9h91kMZsMvTanmihoOFH8GDg4i8JlxqcvimFK6WeyKB6az6eikE4mC5meKCLvvVG3KIYVURwYEZ82UdQmigcyLmY/NB9373PpbLKQ6YrifOBE6hseW0Txw4oo+oqiNlF8DPgF7Hpq5NDn762/ln3iUBTnVRJFHcNjq6I4ICI+ZzG7NlH8VE4Uv6goxGQh0xTF+4GTGkgUNyqKxkTxMKxRiMniDkpjE3RgFEKNieLEBhLF94GnRMQ/KoraRHH/LIpfpr6ak2zldJgsPDFtFcVJ1F/M/q6iqF0Ue1VEYTF77bBmIa0TxfsaEsV/AvtHxL8oitpE8ZNZFA83UYjJQqYtit9rQBTXK4raRbEn4/0oFIWYLGQuRfGdLIovKopaRXEN8OuKYnZOj8liNnG5j20TxbkNieLbwH6KolZR3I/xVqiKYrZwP4sZxUZo2xLFM6l/eOw3gSdHxP9RFLWK4mrgEYpClIVMUxTnVBJFncNjv5ETxb8ritpEcZ+cKB6Jo55EWcgURXEucHIDieI/gH0j4stltVPPxNTOZ29CFI/CCXcze7qUhcxronhmA4ni6zlRfLU8AXsmpiqKUUrp3lkUv4FdT7NM6x+SlEU7RXFyjQ1LebL9Sk4UX1MUtYniXsCHFYXMAvN28aUJi4cNS+OiGGRR7BcR31AUtYliD+AjwOMUhZgsdlwaigJK43J2Q6L4EuNRT4pi+uezn8/l7sCHFMVc0frh/HZDzX+iGGZR/H5Dotg/Ir6lKGpJFMOKKJ6gKOaK1vd2zKssorJvdJdFMUopvbchUXyRcY1CUdQjilFKabcsir0VhSiL6bCY94zunDAmRHE2cEpDotgvIr6tKGoTxT2BjYpClMX03m8C9k4p/XxELKaUOjPmfEIUZzWUKP45J4rrFUWtiWIj8ERFMbdYs5hRWfwMcG1K6ZdyP2/rhbFC19Op1DfhriqK/SPiBkVRmyjuAVwF/LaimGucZzGj73kI/DTw8ZTSr2ZhtPYmWyFRlK6nuibcDYAvMO56+q6iqD1RPElRiLKoh35u1B6QhfGIiFhqozBWEMWp1D/h7h8Y73D3PUVRa6LYoChEWTQnjD2Ba1JKj22bMBoWRUkUnwMOiIgbFUWtorgK+B1F0RqsWcyJMO4HXJ1S2jsLY2HeT8zEhLumEsVncqJQFPWJYtecKBRFu2j9vdKGoaf9bPU9gI+klJ6cR0nN7U04MeHuPQ2IYgB8GjgwIn5UJoh5/9eSKDYA+ygKURZr9zlGwG7AhpTSAfOaMCYSxZnAsxoQxScZdz39qCw54a0xdVHskkXxu4pClMVsCGMX4MqU0mHzljBWSBSnNSCKTwAHR8R/2fVUmyh2ZVyj2Ac3Lmrdac7f7YaaU2EsAOtSSkfNS9F7ophdEkVdDUsRxd8ABymKxhLFIm5c1FaUxZx+ppRvyg+mlE6adWGsIIrTamxYiiiuBZ4aEbdYo6hVFFey3PW04NERZTGbn2sEnJdSetasCmNCFO9mueupjoaliOJjWRT/XRo2b4XaRLEv1ihEWcw0kb9GwHtSSi/IwujnBnoWRfFs6q9RXAMcFhG3KoraRHF3YL2i6BQuUd4SYQyBt6aU/jB3t/TWWhhrJIqPAIcqikYSxX6KolM4Ka8lwijrSb0+pfSqtRbGxPDYdzUkig8BR0TEbYqiNlHsDFyhKERZzL8wloDXppT+LAsjmhbGxPDYdwHPaUAUGxRF7aK4e04U+ysKURbzL4yyPMj/Sim9qWyg1JQwVkgUTYhiPfAMYFFR1Joo1mdR1LVsvMw2Dp1tqTCWgBenlN5ehozWLYw1ShSXAc+IiE3531YU9SSKKyqJwuGx3cSaRUspCeN5KaUzIyJRY5fURKJ4ZxbFkHrnUVwKHAMMTRS1JorLgQNMFKIs2p8wTkspnVMa05TSVI9JRRTDLIrTWV7lddpyKqL4IHB0FpKJoh5R3K0iChOFKIuWM8gN6skppfNz452mJYyJrqd3VERRxxNoebK9CDiOvGaNoqgtUVwBHIjFbFl+UFMWLackjBOAD7A892GHjs1E19M7gOdSb41iAbgAOL4iiuTprSVRXKYoZAJrFh1KGEuMu24uyUubb3fCmOh6qlsUJVGcHxEnlhcVRW2J4jLgIEUhXUNZ3FUYRzIuDg+2J2FMiOLtDSWKcyPipFKgVxS1iGKnfF0crChEWUgRxtOA9SmlnbdFGCuI4nkNJIpzIuL3y3tUFNMVRU6YpetJUciWHtyURUeFcRBwRUrpbqsRRsOiKIniPRFxSmnUFMX0EwXLw5APweGxsnmsWXRcGAesJmGsgSgGwJkR8WxFUWuiWADWZVE4PFY6jbLYsjAWszCu3JwwJkTxtiyKuifcvTMinqMo6hNFPs7rgENNFCLKYmss5AZ6/5USxgqieD71T7h7e0Q8T1HUI4rc9dQHLsmiMFHIau9PcD8LEwbwFO5cw+izPOHurRVR1Nn19OaIeEH+txVFDYki76Z4CXAYFrNlGy4hk4VUE8YBwGUppZ0iYpil8VbgBTU1LKnye98YES/OohgpiumLIj8VXgwcrihElMWOJIwlxsMn16WUdk8pvaVGUcC49jEA/iIiXqYoahFFZFH0Ga+pdaSiEFm5AZRtO14jxvMwvgA8JP+5jkRRfu+fRcQrFUXtieIi4OmMuxytUci2smiykJWO2SiLItVwDIso+sBrsygGiqK2RNFjvCbY07GYLTt23yoL2awwooYLroji1RHxmpwohopi6qIgn78LGa8J5vBYkS3gzTE7oq2K4hUR8ec5USiKekRBRRQmChFlMTcRtoji5RFxhqKoTRRFFhcw3knQYrbs6L0LsElZSBMXWxmN85KI+EtFUZ8o8nDnC4FjFYWIspg3UfSAF0XEWxRFrYki5R0Rj1MUIspiHkXx/Ih4h6KoRRRlWZRRFsUJikJqup+VhdQqiudGxLtSSoOIWPLQTD1REBEppfQ+RSE10vp715tmbUVxWkSclVJaiIhFD83URVFqFOcBJ+GEOxFlMWdRtQecEhHn5EShKOoTxblZFA6PFVEWcyUKgJMi4nwTRe2iOAd4polCGr6/lYVsN2W2dwJOjIgPmChqF8V7gZNNFNIQrb+XlUX9lF3zloBjI+JSE0XtojgLOIU7L+HhCDOfqus+BkOWF6ZsXTumLOq/gPqMZ3ceHRHrTRS1iYJKojgl37jVRBEeqdoIjzED6tlKeVa4p7Koj9L19FXgBRFxtcNja22sFvL+IqdkOQ9YHnkm9T8URb7mu5qqfgRsaOkxCOC2SCltwj7dWmJbftI4JCI+lHfX2+RhqS1dLDBeNv4WXE15LRvOb0fE0EPRzugkNVs5zyIeeShqPMjjrr0veSRkjR5Wou0PKcqimYZslIUh9d6wHuMZuNY7+rlLgVtZiNhQiXQXn8RERERZiIiIshAREWUhIiLKQkRElIWIiCgLERFRFiIiIspCRESUhYiIKAsREVEWIiKiLERERFmIiIiyEBERZSEiIqIsREREWYiIiLIQERFlISIiykJERJSFiIgoCxERURYiIiLKQkRElIWIiCgLERFRFiIioixERERZiIiIshAREWUhIiKiLERERFmIiIiyEBERZSEiIspCRESUhYiIKAsREVEWIiIiykJERJSFiIgoCxERURYiIqIsREREWYiIiLIQERFRFiIioixERERZiIiIshAREWUhIiLKQkRElIWIiCgLERERZSEiIspCRESUhYiIKAsREZkpBh6C2oj8fVNKqQ9ESik8LNLqiz4idfFzd+HeVhb1McrJ7bcj4hpg6CERUZJz+xlTSpuABU/39B828vdF4AXApcDSxP8TaVOSTsB/dzFdpJR2BfotvbcDSMqiOX4E3M5y95RImx6MesAtwKMi4ocppWi7NMpnzN3MnwIekh8I21gLvtVuqGZupATcy0MhLWcT3R00c3/gfm0+t8qimQgX2PUk7X4giiyLLosysVyrVBayQ9IQaftDUdc/f1uPQzjPQkREtoqyEBERZSEiIspCRESUhYiIKAsREVEWIiKiLERERFmIiIgoCxERURYiIqIsREREWYiIiLIQERFlISIiykJERJSFiIiIshAREWUhIiLKQkRElIWIiCgLERFRFiIioixERERZiIiIKAsREVEWIiKiLERERFmIiIiyEBERZSEiIspCRESUhYiIiLIQERFlISIiykJERJSFiIgoCxERURYiIqIsREREWYiIiCgLERFRFiIioixERERZiIiIshAREWUhIiLKQkRERFmIiIiyEBERZSEiIspCRESUhYiIKAsREWkNAw+BiEyRfkqpD0RKKbX8s5bP2FcWIiKrJwE3RcSwY597mFIaKQsRkdW3J4emlG7KT9utTxb5M/aA3dp+ciOltAlY8DoXEZHNcMugA/YXkeYYdbRNaX3dYgAsAjt5jYvIFHCEZbtIjLvbFnvAbZUXRUREJrm9B9zkcRARkS1wcw/4oclCRERWoHjhBz3ge8pCRES2IIsbesA3PR4iIrIFvtEDvpT/EB4PERGpULzw5R7wv5WFiIhsRhYJ+GIP+Drwg8qLIiIiZY7F94Gv94DvZGGgLEREZMIHX4mIG3oRkYDP5hdHHh8REWF56ZbPw/LU/E/k707VFxGR4oMAPlmVw6eBm/Of7YoSEek2Zen1HwN/D9BLKfUi4nvAp/IPDD1OIiKdZph98MmI+H5Kqd+rpIsrcuRwCK2ISLcpLlhf/hwppYiIlFLaE/h3YA+Wh0yJiEi3KO3/jcDDIuLGlFL0sij6EfFdYGP+YUdFiYh0k9L+b8yi6EdEmhz9dBbLhQ0REekeZaDT2ZMvEhHDXOj+e+DvcgSx0C0i0i2Guf3/ZER8NnthyESCKDWKN3q8REQ6zV9OeOHOReyUUokffwf8ZrZM3+MmItKJVNFnvKLH4wEi4o769WRtIvLyH6/2uImIdJJXZUncKUz0JkxRahfXAldmy1i7EBHpRqr4UET8VbVWcYcfJv9GpSvqIcB1wC44WU9EpK2k/HUb8AjgK+PsEKPNJoucLkZALyK+Crw2/4zpQkSkvamiB/xpRHw5t/93mWu3YlpIKQXLY20/AeyNxW4RkTaKos94scDfyq+Ncu1667LIwuhFxCil9BDgC8Bu2B0lItIWSvfTLcCjI+LLpd1f6Yc3O1M7i6IfEV8DnsVyd5RLmIuIzL8oSvfTs7Mo+psTxRZlkYUxTCkNImIdcAYwAJY8ziIic80wt+dviYiLsii2WJveapdSqV9kcawHDs3CGHi8RUTmjtJ+X5Xb8x6bqVNskywqwgC4O3A140KIwhARmU9RfAZ4MnArKwyTXYlVrS6bjRMRcSvwVMYbeNslJSIyf6L4J+CQiLhltaJYtSyyMEa5Un4TcCDwufwPL3oORERmmsXcXn8BOCDvU9FbrSi2SRYTwrgReArw18BCNpajpEREZjNRLACfBPaPiP/cVlFssywmhPGjnDAuzMZKuMOeiMisMMpfA+ASYL+I+MH2iGK7ZDEhjNsj4gTglfl3uTSIiMjaM6y0ya+LiKMj4rbtFQXs4GzsPEoqsjwOAM4EHsjybktuzyoi0hylh6cPXA+cHhEbygKxWxseO/VkUUkYKYtiEBEfBR4HXJHfaA9rGSIiTUliKT+k94GNwOOyKPo7KoodlkVFGkt5BuD1EXEEcDzwLcZ9ZWU/b6UhIjJ9SZSenEFOEydHxFMj4ltlZvaOigKmvChgjjqlprEn8DLg2Ywn88FyP5qLEYqI7JgkSncTwO3Ae4HXR8T11RLBtP7BWhrt6jojKaWHAy8BjmY8fAusaYiIbA+jLIoiiSVgPXBGRFw32f5Ok9qe8KtrSuU//wpwGnAUcJ/Kj5YPZeIQEblrgihf1TbyJmAdcGZE/EuRBKtY42nmZFGRRi/HoSKNBwBHAMcAvzHx46W2ERNfIiJdEkNpByc3nLsOuBi4NCL+X6WNZZpdTmsii81JI7/2aOAQYB/gkcBOWziAYJFcRNpFVL6v1B4vMV7L6Vrgqoj4XKX9LKOcRk2+0ebUOe6e6kfE0sTrPwc8FnhUFscDgb02IxARkbaxifFopm/lBPEF4HN5A7pqWzlg3N3U6IoZa9rFk80Yk+LI/2+PijB+DvhJ4L7A7owL5TuxvE+4iMg8pIhRlsIi8GPgRuA/gf8AbgC+mRdrZQVBJGqsSWyN/w9yg5Gm2SXKigAAAABJRU5ErkJggg==" alt="V4">
+    <p>Assistente de operação audiovisual — guia interno de equipamentos audiovisuais.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ---------- Accordion ----------
+  document.querySelectorAll('[data-toggle]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var card = btn.closest('.tutorial');
+      var isOpen = card.getAttribute('data-open') === 'true';
+      card.setAttribute('data-open', isOpen ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
